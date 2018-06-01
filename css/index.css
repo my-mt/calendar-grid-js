@@ -1,0 +1,22 @@
+#calendar-tadev table {
+  border-collapse: collapse;
+  width: 100%;
+  height: 300px;
+}
+#calendar-tadev td {
+  width: 14.285%;
+  border: 1px solid #333;
+  vertical-align: top;
+}
+#calendar-tadev td .main {
+  border: 1px solid #f00;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+#calendar-tadev td div {
+  border: 1px solid #ff0;
+}
+/*# sourceMappingURL=index.css.map */
