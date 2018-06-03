@@ -1,10 +1,22 @@
-$(function() {
-    var dataEvents = [
-        {"id": 3669, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 1, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": ""},
-        {"id": 3669, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 0, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": ""},
-        {"id": 3669, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-30", "result": 0, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": ""}
-    ];
+function showEvent(idEvent) {
+    var dataEvent = dataEvents.filter(function(data) {
+        return (data.id == idEvent);
+    });
+    $("#eventModal .modal-title").text('').text(dataEvent[0].event_name);
+    $("#eventModal .modal-body h3").text('').text(dataEvent[0].result);
+    $("#eventModal").modal('show');
+}
 
+var dataEvents = [
+    {"id": 1, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 8, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#1834FF", "event_name": "My event"},
+    {"id": 2, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-04", "result": "", "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#FF1840", "event_name": "My event2"},
+    {"id": 3, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 8, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#1834FF", "event_name": "My event3"},
+    {"id": 4, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-06", "result": 11, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#FF1840", "event_name": "My event4"},
+    {"id": 5, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 1, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#156E07", "event_name": "My event5"},
+    {"id": 6, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-30", "result": 1234, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#10514E", "event_name": "My event6"},
+];
+
+$(function() {
     var D1 = new Date(1523642400 * 1000);
     var month = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]; // название месяца, вместо цифр 0-11
 
@@ -50,35 +62,33 @@ $(function() {
     }
 
 
+
 // дни месяца
 
     for (var i = 1; i <= D1last; i++) {
         var curDayStr = (i < 10) ? '0' + i : i;
         var curDateStr = yearP + '-' + MonthStr + '-' + curDayStr;
 
-        var dataEventsDey = dataEvents.filter(function(data) {
+        var dataEventsDay = dataEvents.filter(function(data) {
             return (data.date_time == curDateStr);
         });
 
-        console.log(i);
-        console.log(dataEventsDey);
-
         var eventsList = '';
-        if (dataEventsDey.length > 0) {
-            dataEventsDey.forEach(function(item, i) {
-                eventsList += ' ' + item.result;
+        if (dataEventsDay.length > 0) {
+            dataEventsDay.forEach(function(item, i) {
+                var sizeEventItem = 'size-' + (item.result + '').length;
+                eventsList += '<span onclick="showEvent(' + item.id + ')" class="event-item ' + sizeEventItem + '" style="background-color: ' + item.background + '">' + item.result + '</span>';
             });
         }
 
-        if (i != D1.getDate()) {
-            calendar1 += '<td><div class="main"><div>';
-            calendar1 += i + eventsList;
-            calendar1 += '</div></div></td>';
-        } else {
-            calendar1 += '<td id="today"><div class="main"><div>';  // сегодняшней дате можно задать стиль CSS
-            calendar1 += i + eventsList;
-            calendar1 += '</div></div></td>';
-        }
+        var today = '';
+        if (i != D1.getDate())
+            today = ' today ';
+
+        calendar1 += '<td><div class="main">';
+        calendar1 += '<div class="date' + today + '">' + i + '</div>' + eventsList;
+        calendar1 += '</div></td>';
+
         if (new Date(D1.getFullYear(), D1.getMonth(), i).getDay() == 0) {  // если день выпадает на воскресенье, то перевод строки
             calendar1 += '<tr>';
         }
@@ -92,7 +102,7 @@ $(function() {
 
 
     var calendar2 = '<table><thead><tr><td colspan="4">' + D1.getFullYear() + '</td><td colspan="3">' + month[D1.getMonth()] + '</td></tr><tr><td>Пн</td><td>Вт</td><td>Ср</td><td>Чт</td><td>Пт</td><td>Сб</td><td>Вс</td></tr></thead>';
-    calendar2 += calendar1 + '</tbody></table>';
+    calendar2 += '<tbody>' + calendar1 + '</tbody></table>';
     $("#calendar-tadev").append(calendar2);
 
 });
