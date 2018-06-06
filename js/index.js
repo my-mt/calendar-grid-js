@@ -2,18 +2,23 @@ function showEvent(idEvent) {
     var dataEvent = dataEvents.filter(function(data) {
         return (data.id == idEvent);
     });
+    var event = dataEvent[0];
+    var table = '<table class="table"><tr><td>';
+    table += event.date_time + '</td';
+    table
+    
     $("#eventModal .modal-title").text('').text(dataEvent[0].event_name);
     $("#eventModal .modal-body h3").text('').text(dataEvent[0].result);
     $("#eventModal").modal('show');
 }
 
 var dataEvents = [
-    {"id": 1, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 8, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#1834FF", "event_name": "My event"},
-    {"id": 2, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-04", "result": "", "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#FF1840", "event_name": "My event2"},
-    {"id": 3, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 8, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#1834FF", "event_name": "My event3"},
-    {"id": 4, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-06", "result": 11, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#FF1840", "event_name": "My event4"},
-    {"id": 5, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01", "result": 1, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#156E07", "event_name": "My event5"},
-    {"id": 6, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-30", "result": 1234, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#10514E", "event_name": "My event6"},
+    {"id": 1, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01 22:34", "result": 8, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#1834FF", "event_name": "My event"},
+    {"id": 2, "event_id": 127, "user_id": 39, "note": "", "date_time": "2018-04-04 22:34", "result": "", "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#FF1840", "event_name": "My event2"},
+    {"id": 3, "event_id": 126, "user_id": 39, "note": "", "date_time": "2018-04-01 22:34", "result": 8, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#1834FF", "event_name": "My event3"},
+    {"id": 4, "event_id": 127, "user_id": 39, "note": "", "date_time": "2018-04-06 22:34", "result": 11, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#FF1840", "event_name": "My event4"},
+    {"id": 5, "event_id": 128, "user_id": 39, "note": "", "date_time": "2018-04-01 22:34", "result": 1, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#156E07", "event_name": "My event5"},
+    {"id": 6, "event_id": 129, "user_id": 39, "note": "", "date_time": "2018-04-30 22:34", "result": 1234, "price": 250, "additionally": "\u0421\u043d\u0435\u0433\u043e\u0432\u0438\u043a", "source": "", "background": "#10514E", "event_name": "My event6"},
 ];
 
 $(function() {
@@ -69,9 +74,26 @@ $(function() {
         var curDayStr = (i < 10) ? '0' + i : i;
         var curDateStr = yearP + '-' + MonthStr + '-' + curDayStr;
 
+        // отфильровываем события текущей даты
         var dataEventsDay = dataEvents.filter(function(data) {
-            return (data.date_time == curDateStr);
+            return (data.date_time.substring(0, 10) == curDateStr);
         });
+        
+        
+        
+        var dataEventsDayObj = {};
+
+        dataEventsDay.forEach(function(item) {
+            if (!Array.isArray(dataEventsDayObj[item.event_id]))
+                dataEventsDayObj[item.event_id] = [];
+            dataEventsDayObj[item.event_id].push(item.id);
+        });
+//        console.log(dataEventsDayObj);
+        
+        for (key in dataEventsDayObj) {
+            console.log(dataEventsDayObj[key ]);
+        }
+
 
         var eventsList = '';
         if (dataEventsDay.length > 0) {
